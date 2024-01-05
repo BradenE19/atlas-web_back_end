@@ -10,10 +10,14 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
     # create an empty list
     my_list = []
 
+    """lists lists lists"""
     # run concurrent tasks
     for i in range(n):
+        """lists lists lists"""
         # wait for each task and append results
         my_list.append(wait_random(max_delay))
     # sort list
+        """lists lists lists"""
     sor = await asyncio.gather(*my_list)
+    # return list
     return sorted(sor)
