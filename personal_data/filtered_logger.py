@@ -124,12 +124,12 @@ def main():
             data_row: str = ''
             for key, value in zip(headers, row):
                 data_row = ''.join(f'{key}={str(value)};')
-
+                """annotation"""
             log.info(data_row)
-
     cursor.close()
     db.close()
+    """annotation"""
 
-
+"""annotation"""
 if __name__ == '__main__':
     main()
