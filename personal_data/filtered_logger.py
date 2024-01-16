@@ -31,8 +31,8 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         password=passw,
         database=db
     )
-
     return medb
+"""annotation"""
 
 
 def get_logger() -> logging.Logger:
@@ -51,6 +51,7 @@ def get_logger() -> logging.Logger:
 
     log.addHandler(stream_handler)
 
+    """annotation"""
     return log
 
 
