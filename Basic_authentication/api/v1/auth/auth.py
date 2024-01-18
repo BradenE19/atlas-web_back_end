@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" auth.py module
+""" Module of auth
 """
 from flask import request
 from typing import List, TypeVar
@@ -10,6 +10,8 @@ class Auth:
 
     def __init__(self):
         """
+            Constructor
+
             Args:
                 path: path to authenticate
                 excluded_paths: list of excluded path to authenticate
@@ -59,6 +61,10 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """
             Look current user
+
+            Args:
+                request: Look the reques user
+
             Return:
                 The user
         """
