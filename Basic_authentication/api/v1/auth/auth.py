@@ -44,6 +44,10 @@ class Auth:
     def authorization_header(self, request=None) -> str:
         """
             Look the headers
+
+            Args:
+                request: Look the autthorization
+
             Return:
                 The authorization header or None
         """
