@@ -15,7 +15,6 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 AUTH_TYPE = getenv('AUTH_TYPE')
 
-
 if AUTH_TYPE == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
@@ -34,6 +33,10 @@ def not_found(error) -> str:
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """Handle a unauthorized access
+
+        Args:
+            error: Error catch
+
         Return:
             Info of the error
     """
@@ -43,6 +46,10 @@ def unauthorized(error) -> str:
 @app.errorhandler(403)
 def forbidden(error) -> str:
     """Handle a forbidden resource
+
+        Args:
+            error: Error catch
+
         Return:
             Info of the error
     """
