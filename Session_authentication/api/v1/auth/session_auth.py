@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""session authentication method"""
-from api.v1.views import app_views
-from flask import abort, jsonify, request
+'''Session Auth class'''
+
+from flask import request
+from typing import List, TypeVar
+from api.v1.auth.auth import Auth
+import base64
+import uuid
 from models.user import User
-import os
 
 
 class SessionAuth(Auth):
-    """SessionAuth"""
+    '''self descriptive'''
     user_id_by_session_id = {}
