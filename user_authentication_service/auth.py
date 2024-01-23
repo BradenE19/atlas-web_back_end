@@ -42,3 +42,10 @@ class Auth:
             return checkpw(password.encode('utf-8'), user.hashed_password)
         except NoResultFound:
             return False
+
+
+def _generate_uuid() -> str:
+    """ Generates UUID
+    Returns string representation of new UUID
+    """
+    return str(uuid4())
