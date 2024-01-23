@@ -52,12 +52,21 @@ class DB:
         #  Return newly created user object
         return new_user
 
-    def find_user_by(self, **kargs) -> TypeVar('User'):
-        ''' def find user '''
-        try:
-            user = self._session.query(User).filter_by(**kargs).first()
-        except TypeError:
+    def find_user_by(self, **kwargs) -> User:
+        """ Finds user by key word args
+        Return: First row found in the users table as filtered by kwargs
+        """
+        if not kwargs:
             raise InvalidRequestError
+
+        column_names = User.__table__.columns.keys()
+        for key in kwargs.keys():
+            if key not in column_names:
+                raise InvalidRequestError
+
+        user = self._session.query(User).filter_by(**kwargs).first()
+
         if user is None:
             raise NoResultFound
+
         return user
