@@ -19,8 +19,8 @@ class DB:
     """DB class
     """
 
-    def __init__(self):
-        """Initialize a new DB
+    def __init__(self) -> None:
+        """Initialize a new DB instance
         """
         self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
@@ -28,22 +28,26 @@ class DB:
         self.__session = None
 
     @property
-    def _session(self):
-        """Memoized session object"""
+    def _session(self) -> Session:
+        """Memoized session object
+        """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
-        """Method saves user to DB,
-        adds new user to new session,
-        saves user to DB"""
-        # Create user object
-        user = User(email=email, hashed_password=hashed_password)
-        # Add user to session
-        self._session.add(user)
-        # Save user to Db
-        self._session.commit()
-        # Return new user object
-        return user
+    def add_user(self, email: str, hashed_password: str) -> User:
+        """ Method that saves an user to the database
+        adding new user to the session,
+        saves it to the database
+        """
+        # Create a new user object
+        new_user = User(email=email,
+                        hashed_password=hashed_password)
+        session = self._session
+        # Add the user to the session object
+        session.add(new_user)
+        # Save the user to the database
+        session.commit()
+        #  Return newly created user object
+        return new_user
