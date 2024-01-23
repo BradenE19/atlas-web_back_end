@@ -34,3 +34,11 @@ class Auth:
 
         else:
             raise ValueError(f'User {email} already exists')
+        
+    def valid_login(self, email: str, password: str) -> bool:
+        """If password is valid returns true, else, false"""
+        try:
+            user = self._db.find_user_by(email=email)
+            return checkpw(password.encode('utf-8'), user.hashed_password)
+        except NoResultFound:
+            return False
