@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""DB module"""
+"""function returns a <class 'user.User'>
+parameter email is annotated as a <class 'str'>
+parameter hashed_password is annotated as a <class 'str'>"""
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -12,7 +14,9 @@ from sqlalchemy.orm.exc import NoResultFound
 class DB:
 
     def __init__(self):
-        """initialize a new DB instance"""
+        """function returns a <class 'user.User'>
+parameter email is annotated as a <class 'str'>
+parameter hashed_password is annotated as a <class 'str'>"""
         self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
@@ -20,7 +24,9 @@ class DB:
 
     @property
     def _session(self):
-        """Memoized session object"""
+        """function returns a <class 'user.User'>
+parameter email is annotated as a <class 'str'>
+parameter hashed_password is annotated as a <class 'str'>"""
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
