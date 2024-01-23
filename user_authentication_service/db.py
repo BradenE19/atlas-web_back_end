@@ -39,7 +39,7 @@ parameter hashed_password is annotated as a <class 'str'>"""
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
-        return User
+        return user
 
     def find_user_by(self, **kargs) -> TypeVar('User'):
         """function returns a <class 'user.User'>
@@ -51,4 +51,4 @@ parameter hashed_password is annotated as a <class 'str'>"""
             raise InvalidRequestError
         if user is None:
             raise NoResultFound
-        return User
+        return user
