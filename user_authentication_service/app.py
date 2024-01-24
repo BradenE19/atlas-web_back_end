@@ -63,8 +63,8 @@ def login() -> str:
                 "message": "logged in"
                 })
             response.set_cookie('session_id', session_id)
-
             return response
+
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def log_out() -> None:
@@ -76,3 +76,14 @@ def log_out() -> None:
         abort(403)
     AUTH.destroy_session(user.id)
     return redirect('/')
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile() -> str:
+    """response to the GET /profile"""
+    session_id = request.cookies.get('session_id')
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        return jsonify({"email": user.email}), 200
+    else:
+        abort(403)
