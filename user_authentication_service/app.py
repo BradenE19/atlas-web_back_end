@@ -63,12 +63,15 @@ def login() -> str:
                 "message": "logged in"
                 })
             response.set_cookie('session_id', session_id)
+
             return response
 
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def log_out() -> None:
-    """Find user with requested session ID
+    """Find the user with the requested session ID.
+    If the user exists destroy the session and redirect the user to GET /.
+    If the user does not exist, respond with a 403 HTTP status.
     """
     session_id = request.cookies.get('session_id')
     user = AUTH.get_user_from_session_id(session_id)
@@ -105,3 +108,33 @@ def get_reset_password_token() -> str:
     msg = {"email": email, "reset_token": reset_token}
 
     return jsonify(msg), 200
+
+
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
+def update_password() -> str:
+    """ Update the password
+    PUT /reset_password
+    Updates password with reset token
+    Return:
+        - 400 if bad request
+        - 403 if not valid reset token
+        - 200 and JSON Payload if valid
+    """
+    try:
+        email = request.form['email']
+        reset_token = request.form['reset_token']
+        new_password = request.form['new_password']
+    except KeyError:
+        abort(400)
+
+    try:
+        AUTH.update_password(reset_token, new_password)
+    except ValueError:
+        abort(403)
+
+    msg = {"email": email, "message": "Password updated"}
+    return jsonify(msg), 200
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port="5000")
