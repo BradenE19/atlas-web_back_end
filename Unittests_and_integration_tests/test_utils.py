@@ -4,7 +4,7 @@ import unittest
 from utils import access_nested_map
 
 class TestAccessNestedMap(unittest.TestCase):
-    def test_access_nest_map(self):
+    def test_access_nested_map(self):
         nested_map = {
             "a": {
                 "b": {
