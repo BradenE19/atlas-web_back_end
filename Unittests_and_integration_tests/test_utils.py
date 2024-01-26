@@ -11,10 +11,14 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2),
     ])
-    def test_access_nested_map_exception(self, nested_map, path, expected_exception, expected_message):
-        with self.assertRaises(expected_exception) as context:
-            access_nested_map(nested_map, path)
-        self.assertEqual(str(context.exception), expected_message)
+    def test_access_nested_map(self, nested_map, path, expected_result):
+        self.assertEqual(access_nested_map(nested_map, path), expected_result)
+    
+    def test_access_nested_map_exception(self, map, path, wrong_output):
+        """ test that method raises correct exception """
+        with self.assertRaises(KeyError) as e:
+            access_nested_map(map, path)
+            self.assertEqual(wrong_output, e.exception)
 
 
 if __name__ == '__main__':
