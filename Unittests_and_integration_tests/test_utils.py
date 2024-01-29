@@ -46,5 +46,25 @@ class TestGetJson(unittest.TestCase):
             mock_get.assert_called_once_with(test_url)
 
 
+class TestMemoize(unittest.TestCase):
+    """unit test for test_memoize function"""
+    def test_memoize(self):
+        """check if test_memoize returns expected result"""
+        class TestClass:
+            def __init__(self):
+                """initialize class"""
+                self.call_count = 0
+
+            def a_method(self):
+                """a_method"""
+                self.call_count += 1
+                return 42
+            
+            @memoize
+            def a_property(self):
+                """a_property"""
+                return self.a_method()
+
+
 if __name__ == '__main__':
     unittest.main()
