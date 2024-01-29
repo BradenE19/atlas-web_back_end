@@ -61,6 +61,64 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(has_license, expected)
 
 
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    fixtures.TEST_PAYLOAD)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """ Test for the GithubOrgClient class.
+        Args:
+            unittest (unittest.TestCase): unittest
+    """
+    @classmethod
+    def setUpClass(cls):
+        """ Test for the GithubOrgClient class.
+            Args:
+                unittest (unittest.TestCase): unittest
+        """
+        # Start the patcher for requests.get
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+
+        # Define the side_effect function for your mock
+        def side_effect(url):
+            if url == f"https://api.github.com/orgs/ \
+                    {cls.org_payload['login']}":
+                return Mock(json=lambda: cls.org_payload)
+            elif url == f"https://api.github.com/orgs/ \
+                    {cls.org_payload['login']}/repos":
+                return Mock(json=lambda: cls.repos_payload)
+            # ... handle other URLs if necessary ...
+            return Mock(status_code=404)
+
+        cls.mock_get.side_effect = side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """ Test for the GithubOrgClient class.
+            Args:
+                unittest (unittest.TestCase): unittest
+        """
+        # End the patch
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """ Test that GithubOrgClient.public_repos returns the expected result
+        """
+        github_org_client = GithubOrgClient("google")
+
+        self.get_patcher = patch('client.get_json',
+                                 return_value=self.repos_payload)
+
+        self.mock_get_json = self.get_patcher.start()
+
+        repos = github_org_client.public_repos()
+
+        self.assertEqual(repos, self.expected_repos)
+
+        self.mock_get_json.assert_called_once()
+
+        self.get_patcher.stop()
+
 
 if __name__ == '__main__':
     unittest.main()
