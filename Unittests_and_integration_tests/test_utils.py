@@ -34,14 +34,16 @@ class TestGetJson(unittest.TestCase):
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url, test_payload):
-        """Test that the output of get_json is equal to test_payload."""
-        mock_response = mock()
-        mock_response.json.return_value = test_payload
-        with patch('requests.get', return_value=mock_response):
-            real_response = get_json(test_url)
-            self.assertEqual(real_response, test_payload)
-            # check that mocked method called once per input
-            mock_response.json.assert_called_once()
+        """ Test get_json method for utils.py
+        check if the method returns the result as expected
+        """
+        mock = Mock()
+        mock.json.return_value = test_payload
+        with patch('requests.get') as mock_get:
+            mock_get.return_value = mock
+            result = get_json(test_url)
+            self.assertEqual(result, test_payload)
+            mock_get.assert_called_once_with(test_url)
 
 
 if __name__ == '__main__':
