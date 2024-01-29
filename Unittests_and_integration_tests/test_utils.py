@@ -6,6 +6,7 @@ from unittest.mock import patch, Mock
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
 
+
 class TestAccessNestedMap(unittest.TestCase):
     """Unit Test for access_nested_map"""
     @parameterized.expand([
@@ -20,11 +21,13 @@ class TestAccessNestedMap(unittest.TestCase):
         ({}, ("a",), 'a'),
         ({"a": 1}, ("a", "b"), 'b')
     ])
-    def test_access_nested_map_exception(self, nested_map, path, expected_result):
-        """ test that method raises correct exception """
+    def test_access_nested_map_exception(self, nested_map, path, exp_result):
+        """ test access_nested_map
+        check if funtion returns expected result
+        """
         with self.assertRaises(KeyError) as raises:
             access_nested_map(nested_map, path)
-            self.assertEqual(expected_result, raises.exception)
+            self.assertEqual(exp_result, raises.exception)
 
 
 class TestGetJson(unittest.TestCase):
@@ -59,7 +62,7 @@ class TestMemoize(unittest.TestCase):
                 """a_method"""
                 self.call_count += 1
                 return 42
-            
+
             @memoize
             def a_property(self):
                 """a_property"""
