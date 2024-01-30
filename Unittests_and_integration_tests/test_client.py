@@ -5,8 +5,9 @@ import fixtures
 from fixtures import TEST_PAYLOAD
 from unittest import TestCase, mock
 from unittest.mock import patch, Mock, PropertyMock
-from parameterized import parameterized
-from client import GithubOrgClient
+from parameterized import parameterized, parameterized_class
+from client import GithubOrgClient, test_public_repos, TestGithubOrgClient
+from utils import test_public_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
