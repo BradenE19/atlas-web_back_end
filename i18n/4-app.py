@@ -6,7 +6,7 @@ from flask_babel import Babel, refresh
 
 
 class Config:
-    """ Configure available languages in our app """
+    """configure available languages"""
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
@@ -21,7 +21,7 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    """ Return user preferred locale, if not available return best match """
+    """return best match for user locale """
     url_locale = request.args.get('locale')
     if url_locale and url_locale in app.config['LANGUAGES']:
         return url_locale
@@ -30,7 +30,7 @@ def get_locale():
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
-    """ Return index.html template """
+    """return index.html template"""
     return render_template('4-index.html')
 
 

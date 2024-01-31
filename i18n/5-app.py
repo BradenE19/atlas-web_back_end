@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
+""" Create a basic Flask App
 """
- Parametrize templates
-"""
-import flask
-from flask import Flask, render_template, g, request
-from flask_babel import Babel
-
-
-app = Flask(__name__)
-babel = Babel(app)
-
+from flask import Flask, render_template, request, g
+from flask_babel import Babel, refresh
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -19,49 +12,55 @@ users = {
 }
 
 
-class Config(object):
-    """
-    a configuration variable
-    """
+class Config:
+    """configure available languages"""
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-def get_user() -> dict:
-    """
-    get user
-    """
+app = Flask(__name__)
+
+app.config.from_object(Config)
+
+babel = Babel(app)
+
+
+def get_user():
+    """ Return user dict if exists """
     user_id = request.args.get('login_as')
-    if user_id and int(user_id) in users:
-        return users[int(user_id)]
+    if user_id:
+        try:
+            user_id = int(user_id)
+            return users.get(user_id)
+        except ValueError:
+            # In case user_id is not an integer
+            return None
     return None
 
 
 @app.before_request
 def before_request():
-    """
-    before request handler
-    """
-    if get_user():
-        g.user = get_user()
+    """ Set/get current user and
+    current language from request parameters
+    and refresh babel translations """
+    g.user = get_user()
 
 
 @babel.localeselector
 def get_locale():
-    """ if a user is logged in, use the locale from the user settings
-    """
-    if request.args.get('locale'):
-        if request.args.get('locale') in Config.LANGUAGES:
-            return request.args.get('locale')
-
-    return request.accept_languages.best_match(['en', 'fr'])
+    """return best match for user locale """
+    url_locale = request.args.get('locale')
+    if url_locale and url_locale in app.config['LANGUAGES']:
+        return url_locale
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-app.config.from_object(Config)
+@app.route('/', methods=['GET'], strict_slashes=False)
+def index():
+    """return index.html template"""
+    return render_template('4-index.html')
 
 
-@app.route("/", methods=['GET'])
-def hello_world():
-    """hello world"""
-    return render_template('5-index.html')
+if __name__ == '__main__':
+    app.run(debug=True)
