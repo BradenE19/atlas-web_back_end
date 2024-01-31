@@ -24,5 +24,11 @@ def hello_world() -> str:
     return render_template("1-index.html")
 
 
+@babel.localeselector
+def get_locale() -> str:
+    """determines best match with supported translated languages"""
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
 if __name__ == "__main__":
     app.run()
