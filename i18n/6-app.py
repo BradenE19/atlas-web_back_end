@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """ Create a basic Flask App
+    with a single '/' route and an index.html template
 """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, refresh
@@ -13,16 +14,18 @@ users = {
 
 
 class Config:
-    """configure available languages"""
+    """ Configure available languages in our app """
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
 app = Flask(__name__)
-
+# Use Config class as config for our app
 app.config.from_object(Config)
 
+
+# Instantiate Babel object in module-level variable babel
 babel = Babel(app)
 
 
@@ -41,26 +44,33 @@ def get_user():
 
 @babel.localeselector
 def get_locale():
-    """return user preferred locale"""
+    """ Return user preferred locale, if not available return best match """
+    # First priority: user locale from URL parameters
     url_locale = request.args.get('locale')
     if url_locale and url_locale in app.config['LANGUAGES']:
         return url_locale
+    # Second priority: user locale from user settings
     if g.get('user'):
         user_locale = g.user.get('locale')
         if user_locale in app.config['LANGUAGES']:
             return user_locale
+    # Third priority: user locale from request header
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+    # Fourth priority: default locale
+    # return app.config['BABEL_DEFAULT_LOCALE'] # default locale
 
 
 @app.before_request
 def before_request():
-    """get users preferred locale / language"""
+    """ Set/get current user and
+    current language from request parameters
+    and refresh babel translations """
     g.user = get_user()
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
-    """return index.html template"""
+    """ Return index.html template """
     return render_template('6-index.html')
 
 
