@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Module for i18n"""
 from flask_babel import Babel
-from flask import Flask, render_template, request, locale
+from flask import Flask, render_template, request
 
 app = Flask(__name__, template_folder='templates')
 babel = Babel(app)
@@ -31,6 +31,12 @@ def get_locale() -> str:
     if locale and locale in app.config['LANGUAGES']:
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+@app.route('/', methods=['GET'], strict_slashes=False)
+def index():
+    """ Return index.html template """
+    return render_template('4-index.html')
 
 
 if __name__ == "__main__":
