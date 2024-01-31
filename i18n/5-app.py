@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """ Create a basic Flask App
+    with a single '/' route and an index.html template
 """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, refresh
@@ -13,16 +14,18 @@ users = {
 
 
 class Config:
-    """configure available languages"""
+    """ Configure available languages in our app """
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
 app = Flask(__name__)
-
+# Use Config class as config for our app
 app.config.from_object(Config)
 
+
+# Instantiate Babel object in module-level variable babel
 babel = Babel(app)
 
 
@@ -49,16 +52,17 @@ def before_request():
 
 @babel.localeselector
 def get_locale():
-    """return best match for user locale """
+    """ Return user preferred locale, if not available return best match """
     url_locale = request.args.get('locale')
     if url_locale and url_locale in app.config['LANGUAGES']:
         return url_locale
+    # if not in url, check user browser settings
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
-    """return index.html template"""
+    """ Return index.html template """
     return render_template('5-index.html')
 
 
