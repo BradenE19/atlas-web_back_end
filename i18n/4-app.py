@@ -26,7 +26,8 @@ def hello_world() -> str:
 
 @babel.localeselector
 def get_locale() -> str:
-    """determines best match with supported translated languages"""
+    """select proper language translation for the request"""
+    locale = request.args.get("locale")
     if locale and locale in app.config['LANGUAGES']:
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
