@@ -6,7 +6,7 @@ from uuid import uuid4, UUID
 from functools import wraps
 
 def count_calls(method: Callable) -> Callable:
-    """takes a single arguement,
+    """takes a single argument,
      returns a Callable """
 
     key = method.__qualname__
@@ -14,10 +14,11 @@ def count_calls(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         """wrapper for decorator functionality"""
-        self._redis.incr(key)
+        self._redis.incr(key + ":calls")  # Increment the call count
         return method(self, *args, **kwargs)
 
     return wrapper
+
 
 def call_history(method: Callable) -> Callable:
     """store history of inputs and outputs for a function"""
@@ -39,7 +40,7 @@ def replay(fn: Callable):
     """display history of calls of a function"""
     r = redis.Redis()
     f_name = fn.__qualname__
-    n_calls = r.get(f_name)
+    n_calls = r.get(f_name + ":calls")
     try:
         n_calls = n_calls.decode('utf-8')
     except Exception:
@@ -71,7 +72,6 @@ class Cache():
 
     @count_calls
     @call_history
-    @replay
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """store input daata in Redis
         use random key to return key
