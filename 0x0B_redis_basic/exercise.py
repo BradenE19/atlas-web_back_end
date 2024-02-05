@@ -5,6 +5,7 @@ from typing import Union, Optional, Callable
 from uuid import uuid4, UUID
 from functools import wraps
 
+
 def count_calls(method: Callable) -> Callable:
     """takes a single argument,
      returns a Callable """
@@ -32,7 +33,7 @@ def call_history(method: Callable) -> Callable:
         self._redis.rpush(method.__qualname__ + ":outputs", output)
 
         return output
-    
+
     return wrapper
 
 
