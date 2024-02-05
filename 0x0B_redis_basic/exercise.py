@@ -3,6 +3,22 @@
 import redis
 from typing import Union, Optional, Callable
 from uuid import uuid4, UUID
+from functools import wraps
+
+def count_calls(method: Callable) -> Callable:
+    """takes a single arguement,
+     returns a Callable """
+
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """wrapper for decorator functionality"""
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+
+    return wrapper
+
 
 class Cache():
     """create Cache class"""
